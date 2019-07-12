@@ -1,4 +1,4 @@
-# logic-craft
+# LogiCraft
 ##### Problem
 
 ### EditCraftAPI
