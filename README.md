@@ -1,4 +1,5 @@
 # LogiCraft
+Campbell Mercer-Butcher, Erik Goesmann, Rafael Goesmann and Marvin Goesmann
 ## Problem
 The department of specific sciency matters has a Science Education sub-department that wants to create software to improve science education amoung younger teens and children. One area of science education that is not easily accessible for younger kids is computer science.
 
