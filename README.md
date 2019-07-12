@@ -11,7 +11,6 @@ LogiCraft is composed of three main parts: EditCraftAPI, SchematiCraft, LogiCraf
 
 ### EditCraftAPI
 EditCraftAPI is going to be the section of our project that will allow us to interface with minecraft world files and give us the needed capabilites to read/write block data.
-
 Minecraft uses a proprietary file type to save data called NBT. We have been able to find a NBT parser python library wich we will use to create our API.
 
 Note: No existing solutions exist for the Java Edition (Atleast not in current versions of minecraft)
@@ -20,7 +19,6 @@ Note: No existing solutions exist for the Java Edition (Atleast not in current v
 
 ### LogiCraftCore
 LogiCraftCore is going to be responsible for connecting and converting the schetiCraft data into block data for the EditCraftAPI.
-
 This will require:
  - Parsing the SchemtiCraft Output
  - Converting indivdual gates and wires into block data
