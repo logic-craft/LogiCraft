@@ -7,8 +7,23 @@ To improve engadgment in computer science amongst kids, we want to create softwa
 
 Minecraft is a world building game most popular amoung a younger auduience. Minecraft has a powerful mechanic called redstone which can eseintially represent eletrical components. Inparticular, logic gates are  easily represented using the redstone mechanics. By allowing users of LogiCraft™ to create and convert logic gate schematics into a minecraft world, users can see a visualisation and begin to explore and understand logic gates in a familiar context.
 
+LogiCraft is composed of three main parts: EditCraftAPI, SchematiCraft, LogiCraftCore
+
 ### EditCraftAPI
+EditCraftAPI is going to be the section of our project that will allow us to interface with minecraft world files and give us the needed capabilites to read/write block data.
+
+Minecraft uses a proprietary file type to save data called NBT. We have been able to find a NBT parser python library wich we will use to create our API.
+
+Note: No existing solutions exist for the Java Edition (Atleast not in current versions of minecraft)
 
 ### SchematiCraft
 
-### LogiCraft
+### LogiCraftCore
+LogiCraftCore is going to be responsible for connecting and converting the schetiCraft data into block data for the EditCraftAPI.
+
+This will require:
+ - Parsing the SchemtiCraft Output
+ - Converting indivdual gates and wires into block data
+ - Ensuring block data doesnt overlap/is valid
+ - Calling the EditCraftAPI to place the blocks in the correct coordanites.
+
