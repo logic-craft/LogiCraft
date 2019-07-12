@@ -17,6 +17,9 @@ Minecraft uses a proprietary file type to save data called NBT. We have been abl
 Note: No existing solutions exist for the Java Edition (Atleast not in current versions of Minecraft)
 
 ### SchematiCraft
+SchematiCraft is the user interface in which students and teachers are able to create logic gate schematics. These schematics can then be exported to Minecraft, where the schematic can be visualised using Minecraft blocks/items. This makes it more relatable and enjoyable for the students to learn.
+
+The export format is going to be a JSON file. This contains a dictionary where the keys are the IDs of the logic gates, and the values are the properties of the logic gate. Each logic gate has inputs and the type of logic gate.
 
 ### LogiCraftCore
 LogiCraftCore is going to be responsible for connecting and converting the SchematiCraft data into block data for the EditCraftAPI.
