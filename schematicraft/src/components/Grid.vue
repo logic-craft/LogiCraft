@@ -51,6 +51,9 @@
             y: logicGate.position.y
           }" 
           v-if="logicGate.logicType.name === 'AND'"
+            @mouseover="showDragCursor"
+            @mouseleave="showDefaultCursor"
+
           />
 
             <v-line :config="{
@@ -75,6 +78,9 @@
               draggable: true
             }" 
                v-if="logicGate.logicType.name === 'XOR'"
+            @mouseover="showDragCursor"
+            @mouseleave="showDefaultCursor"
+
           />
 
           <v-line :config="{
@@ -106,7 +112,9 @@
             stroke: 'black',
             strokeWidth: 2
           }"
-          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'NOT'"
+            v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'NOT'"
+            @mouseover="showDragCursor"
+            @mouseleave="showDefaultCursor"
           />
  
 
@@ -236,6 +244,8 @@
             strokeWidth: 1
           }"
               @click="logicGateCircleClicked(index, true, 1)"
+              @mouseover="onCircleHover"
+              @mouseleave="onCircleHoverOut"
             />
 
             <v-circle
@@ -250,6 +260,8 @@
           }"
               class="logic-gate-connector"
               @click="logicGateCircleClicked(index, false)"
+              @mouseover="onCircleHover"
+              @mouseleave="onCircleHoverOut"
             />
 
             <v-circle
@@ -264,6 +276,8 @@
           }"
               class="logic-gate-connector"
               @click="logicGateCircleClicked(index, false)"
+              @mouseover="onCircleHover"
+              @mouseleave="onCircleHoverOut"
             />
 
             <v-circle
@@ -278,6 +292,8 @@
           }"
               class="logic-gate-connector"
               @click="logicGateCircleClicked(index, true, 0)"
+              @mouseover="onCircleHover"
+              @mouseleave="onCircleHoverOut"
             />
 
             <v-circle
@@ -292,6 +308,8 @@
           }"
               class="logic-gate-connector"
               @click="logicGateCircleClicked(index, true, 0)"
+              @mouseover="onCircleHover"
+              @mouseleave="onCircleHoverOut"
             />
 
             <v-line
@@ -314,8 +332,8 @@
               draggable: true
             }"
             v-if="logicGate.logicType.name === 'LIGHT' || logicGate.logicType.name === 'SWITCH'"
-            @mouseover="onCircleHover"
-            @mouseleave="onCircleHoverOut"
+            @mouseover="showDragCursor"
+            @mouseleave="showDefaultCursor"
             />
           </v-group>
 
@@ -332,6 +350,9 @@
           strokeWidth: 3,
           dash: [20, 2],
         }"
+          @mouseover="showDragCursor"
+          @mouseleave="showDefaultCursor"
+
           />
 
         </v-layer>
@@ -635,6 +656,12 @@ export default {
       document.body.style.cursor = "pointer";
     },
     onCircleHoverOut() {
+      document.body.style.cursor = "default";
+    },
+    showDragCursor() {
+      document.body.style.cursor = "grab";
+    },
+    showDefaultCursor() {
       document.body.style.cursor = "default";
     }
   }
