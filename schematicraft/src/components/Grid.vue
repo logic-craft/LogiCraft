@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="grid">
     <v-stage :config="configKonva">
       <v-layer>
         <v-line :config="{
@@ -7,7 +8,7 @@
           stroke: '#ddd',
           strokeWidth: 1
         }"
-        v-for="i in configKonva.height / padding"
+        v-for="i in configKonva.width / padding"
         v-bind:key="i" 
         />
 
@@ -15,7 +16,7 @@
           points: [0, 0, 10, 10],
         }"
         />
-
+        
         
 
         <v-line :config="{
@@ -29,6 +30,14 @@
 
       </v-layer>
     </v-stage>
+    </div>
+    <div>
+      <img 
+      :src="logicType.image"
+      v-for="logicType in logicTypes"
+      v-bind:key="logicType"
+      />
+    </div>
   </div>
 </template>
 
@@ -37,23 +46,23 @@ export default {
   data() {
     return {
       configKonva: {
-        width: 500,
-        height: 500,
+        width: 1100,
+        height: 800,
       },
-      configCircle: {
-        x: 100,
-        y: 100,
-        radius: 70,
-        fill: "red",
-        stroke: "black",
-        strokeWidth: 4
-      },
+      logicTypes: [{
+        name: "and",
+        image: require("@/assets/andGate.svg")
+      }],
       padding: 20
     }
+
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .grid {
+    float: left;
+  }
 </style>
