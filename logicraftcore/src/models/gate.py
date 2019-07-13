@@ -32,7 +32,7 @@ class Gate:
 
     def place_redstone(self):
         for _input in range(len(self.inputs)):
-            points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(_input + 1)]
+            points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(2)]
             
             for i in range(len(points) - 1):
 
