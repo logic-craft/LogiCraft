@@ -27,8 +27,8 @@ class Gate:
         return [self.coord[0] + 4, self.coord[1] + 1]
     
     def set_redstone(self, coord):
-        self.editor.set_block(coord[0], self.BASE_Y, coord[1], "red_wool")
-        self.editor.set_block(coord[0], self.BASE_Y + 1, coord[1], "redstone_wire")
+        self.editor.set_block(coord[1], self.BASE_Y, coord[0], "red_wool")
+        self.editor.set_block(coord[1], self.BASE_Y + 1, coord[0], "redstone_wire")
 
     def place_redstone(self):
         for _input in range(len(self.inputs)):
