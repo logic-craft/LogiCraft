@@ -28,23 +28,103 @@
 
       </v-layer>
 
-      <v-layer>
-      <v-wedge
-        :config="{
-          radius: 1.5 * padding,
-          angle: 180,
-          rotation: -90,
-          fill: 'black',
-          x: logicGate.position.x,
-          y: logicGate.position.y,
-          draggable: true 
-        }"
-        v-for="(logicGate, index) in logicGates"
-        v-bind:key="`${logicGate.logicType.name}${logicGate.position.x}${logicGate.position.y}`"
-        @dragstart="onLogicGateDragged()"
+    <v-layer>
+      <v-group
+        @dragstart="onLogicGateDragged(index)"
         @dragend="onLogicGateDragEnd(index)"
         @dragmove="event => onLogicGateDragMoved(event)"
-      />
+        v-for="(logicGate, index) in logicGates"
+        v-bind:key="`${logicGate.logicType.name}${logicGate.position.x}${logicGate.position.y}`"
+        :config="{
+          drawBorder: true,
+          width: padding * 4,
+          height: padding * 3
+        }"
+      >
+        <v-wedge
+          :config="{
+            radius: 1.5 * padding,
+            angle: 180,
+            rotation: -90,
+            fill: 'black',
+            draggable: true,
+            x: logicGate.position.x,
+            y: logicGate.position.y
+          }"
+        />
+
+        <v-line
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x,
+            y: logicGate.position.y,
+            points: [1.5 * padding, 0, 3 * padding, 0],
+            stroke: 'black',
+            tension: 1
+          }"
+        />
+
+        <v-line
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x,
+            y: logicGate.position.y,
+            points: [0, padding, -padding, padding],
+            stroke: 'black',
+            tension: 1
+          }"
+        />
+
+        <v-line
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x,
+            y: logicGate.position.y,
+            points: [0, -padding, -padding, -padding],
+            stroke: 'black',
+            tension: 1
+          }"
+        />
+
+        <v-circle 
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y + padding,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+        />
+
+        <v-circle 
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y - padding,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+        />
+
+        <v-circle 
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x + 3 * padding,
+            y: logicGate.position.y,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+        />
+
+
+
+      </v-group>
 
 
       <v-rect
@@ -94,6 +174,7 @@ export default {
       logicGates: [],
       snapbox: {
         isShowingSnapBox: false,
+        indexCurrentlyDragged: null,
         position: {x: 0, y: 0}
       }
     }
@@ -104,12 +185,13 @@ export default {
         logicType,
         position: {
           x: this.configKonva.width / 2 - (this.padding / 2),
-          y: this.configKonva.height / 2 
+          y: this.configKonva.height / 2 - (this.padding / 2)
         }
       });
     },
-    onLogicGateDragged() {
+    onLogicGateDragged(index) {
       this.snapbox.isShowingSnapBox = true;
+      this.snapbox.indexCurrentlyDragged = index;
     },
     onLogicGateDragEnd(index) {
       this.snapbox.isShowingSnapBox = false;
@@ -118,7 +200,7 @@ export default {
     },
     onLogicGateDragMoved(event) {
       this.snapbox.position.x = Math.round(event.target.x() / this.padding) * this.padding;
-      this.snapbox.position.y = this.mapWedgePosToSnapBox(Math.round(event.target.y() / this.padding) * this.padding);
+      this.snapbox.position.y = this.mapWedgePosToSnapBox(Math.round((event.target.y() + this.padding / 2) / this.padding) * this.padding) - (this.padding / 2);
     },
     mapWedgePosToSnapBox(positionY) {
       return positionY - (this.padding * 1.5);
