@@ -1,4 +1,4 @@
-from chunkrow import *
+from editcraftAPI.chunkrow import *
 
 class Editor():
     def __init__(self, path):
