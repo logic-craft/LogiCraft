@@ -49,8 +49,9 @@ class Schematic(Resource):
             else:
                 return "bad request", 400
             
-            gate.place_redstone() 
             gate.place_gate()
+            gate.place_redstone() 
+            
 
         os.system("cd ../maps/LogiCraftCopy; zip -r ../LogiCraftCopy.zip *")
         os.system("rm -r ../maps/LogiCraftCopy")

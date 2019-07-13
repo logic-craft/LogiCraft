@@ -386,38 +386,38 @@ export default {
           name: "AND",
           image: require("@/assets/andGate.svg"),
           amountOfInputs: 2,
-          width: "150px",
+          width: "120px",
         },
         {
           name: "OR",
           image: require("@/assets/orGate.svg"),
           amountOfInputs: 2,
-          width: "150px",
+          width: "120px",
         },
         {
           name: "NOT",
           image: require("@/assets/notGate.svg"),
           amountOfInputs: 1,
-          width: "150px",
+          width: "120px",
         },
 
       {
         name: "LIGHT",
         image: require("@/assets/lightBulb.webp"),
         amountOfInputs: 1,
-        width: "100px"
+        width: "80px"
       },
       {
         name: "SWITCH",
         image: require("@/assets/power.jpg"),
         amountOfInputs: 0,
-        width: "90px"
+        width: "70px"
       },
       {
         name: "XOR",
         image: require("@/assets/xorGate.svg"),
         amountOfInputs: 2,
-        width: "150px"
+        width: "120px"
       }
       ],
       padding: 20,

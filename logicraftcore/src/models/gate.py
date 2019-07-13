@@ -11,10 +11,10 @@ class Gate:
         self.BASE_Y = 50
     
     def get_input_1_coord(self):
-        return [self.coord[0] - 1, self.coord[1]]
+        return [self.coord[0] - 1, self.coord[1] + 2]
 
     def get_input_2_coord(self):
-        return [self.coord[0] - 1, self.coord[1] + 2]
+        return [self.coord[0] - 1, self.coord[1]]
 
     def get_input_coord(self, coord_num=1):
         if len(self.inputs) == 1:
@@ -42,16 +42,18 @@ class Gate:
             if self.inputs[_input] == None:
                 continue
              
-            points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(2)]
+            points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(_input + 1)]
             length = 0
             for i in range(len(points) - 1):
+                print("new point")
                 if points[i][0] == points[i + 1][0]:
                     difference = points[i + 1][1] - points[i][1]
                     multiplier = difference // abs(difference) # 1 or -1
                     for j in range(0, difference + multiplier, multiplier):
                         point = [points[i][0], points[i][1] + j]
                         length += 1
-                        if point not in points and (length == 15 or length == 14):
+                        print("length5", length, point)
+                        if point not in points and (length > 12):
                             self.set_repeater(point, "west" if multiplier == 1 else "east")
                             length = 0
                         else:
@@ -63,7 +65,8 @@ class Gate:
                     for j in range(0, difference + multiplier, multiplier):
                         point = [points[i][0] + j, points[i][1]]
                         length += 1
-                        if point not in points and (length == 15 or length == 14):
+                        print("length5", length, point)
+                        if point not in points and (length > 12):
                             self.set_repeater(point, "north" if multiplier == 1 else "south")
                             length = 0
                         else:
