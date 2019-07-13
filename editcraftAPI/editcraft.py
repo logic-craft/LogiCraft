@@ -23,7 +23,7 @@ def not_gate(editor, x, y):
     editor.set_block(x+1, 51, y+1, "green_wool")
 
     editor.set_block(x+1, 51, y+2, "redstone_wall_torch", {"lit": "true", "facing": "south"})
-
+ 
     editor.set_block(x+1, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
     
 

@@ -22,7 +22,6 @@ class Gate:
         elif coord_num == 2:
             return self.get_input_2_coord()
 
-
     def get_output_coord(self):
         return [self.coord[0] + 4, self.coord[1] + 1]
     

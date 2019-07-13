@@ -38,8 +38,8 @@ class Schematic(Resource):
             gate.place_redstone() 
             gate.place_gate()
 
-        # os.system("cd ../maps/LogiCraftCopy; zip -r ../LogiCraftCopy.zip *")
-        # os.system("rm -r ../maps/LogiCraftCopy")
-        # map_file = send_from_directory("../maps/", "LogiCraftCopy.zip", as_attachment=True)
-        # os.system("rm ../maps/LogiCraftCopy.zip")
-        # return map_file
+        os.system("cd ../maps/LogiCraftCopy; zip -r ../LogiCraftCopy.zip *")
+        os.system("rm -r ../maps/LogiCraftCopy")
+        map_file = send_from_directory("../maps/", "LogiCraftCopy.zip", as_attachment=True)
+        os.system("rm ../maps/LogiCraftCopy.zip")
+        return map_file
