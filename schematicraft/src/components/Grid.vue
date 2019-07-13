@@ -160,11 +160,10 @@
 
       <v-line
           :config="{
-            points: calculateLinePath(input, index),
-            stroke: 'black',
-            tension: 1
+            points: calculateLinePath(input, index, inputIndex),
+            stroke: 'black'
           }"
-          v-if="input"
+          v-if="input !== null"
           v-for="(input, inputIndex) in logicGate.inputs"
           v-bind:key="inputIndex"
         />
@@ -270,8 +269,7 @@ export default {
         const logicGateInputIndex = this.connector.isInput ? this.connector.connectorIndex : index;
         const logicGateOutputIndex = this.connector.isInput ? index : this.connector.connectorIndex;
         const inputIndex = this.connector.inputIndex ? this.connector.inputIndex : currentInputIndex;
-
-        this.logicGates[logicGateInputIndex].inputs[inputIndex] = logicGateOutputIndex;
+        this.$set(this.logicGates[logicGateInputIndex].inputs, inputIndex, logicGateOutputIndex);
         console.log(this.logicGates[logicGateInputIndex].inputs);
         this.connector.connectorIndex = null;
         this.connector.isInput = null;
@@ -282,11 +280,33 @@ export default {
         this.connector.inputIndex = currentInputIndex;
       }
     },
-    calculateLinePath(outputIndex, inputIndex) {
-      const startingPosition = this.logicGates[outputIndex].position;
-      const endingPosition = this.logicGates[inputIndex].position;
+    calculateLinePath(logicGateOutput, logicGateIndex, logicGateInputIndex) {
+      const startingPosition = this.logicGates[logicGateOutput].position;
+      const endingPosition = this.logicGates[logicGateIndex].position;
       console.log("Need to go from", startingPosition, "to: ", endingPosition);
-      return [startingPosition.x, startingPosition.y, endingPosition.x, endingPosition.y];
+      let endPositionSkewY;
+
+      console.log(logicGateInputIndex);
+      if (this.logicGates[logicGateIndex].inputs.length === 1) {
+         endPositionSkewY = 0;
+      }
+      else if (logicGateInputIndex === 0) {
+        endPositionSkewY = -this.padding;
+      }
+      else {
+        endPositionSkewY = this.padding;
+      }
+
+      if (startingPosition.x === endingPosition.x || startingPosition.y === endingPosition.y) {
+        return [startingPosition.x + 3 * this.padding, startingPosition.y, endingPosition.x - this.padding, endingPosition.y + endPositionSkewY];
+      } 
+
+      else {
+        let yeet = [startingPosition.x + 3 * this.padding, startingPosition.y, endingPosition.x - this.padding, startingPosition.y, endingPosition.x - this.padding, endingPosition.y + endPositionSkewY];
+        console.log(yeet);
+        return yeet;
+      }
+      
     }
   }
 };
