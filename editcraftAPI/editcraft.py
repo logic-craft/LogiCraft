@@ -4,12 +4,13 @@ from editor import Editor
 def main(world_folder):
     """Create and run editor"""
     editor = Editor(world_folder)
-    print(editor.get_block_name(1, 120, 3))
+    #print(editor.get_block_name(1, 120, 3))
     and_gate(editor)
     or_gate(editor, 5, 0)
     not_gate(editor, 10, 0)
     switch(editor, 15, 0)
     light(editor, 20, 0)
+    xor_gate(editor, 25, 0)
     #checker(editor)
 
 def checker(editor):
@@ -58,6 +59,39 @@ def switch (editor, x, y):
     editor.set_block(x+1, 51, y+1, "redstone_wire", {"power": "0", "north": "side"})
 
     editor.set_block(x+1, 51, y+2, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
+
+def xor_gate(editor, x, y):
+    editor.set_block(x+0, 50, y+0, "orange_wool")
+    editor.set_block(x+1, 50, y+0, "orange_wool")
+    editor.set_block(x+2, 50, y+0, "orange_wool")
+    editor.set_block(x+0, 50, y+1, "orange_wool")
+    editor.set_block(x+1, 50, y+1, "orange_wool")
+    editor.set_block(x+2, 50, y+1, "orange_wool")
+    editor.set_block(x+0, 51, y+0, "orange_wool")
+    editor.set_block(x+2, 51, y+0, "orange_wool")
+    editor.set_block(x+0, 51, y+1, "orange_wool")
+    editor.set_block(x+2, 51, y+1, "orange_wool")
+    editor.set_block(x+0, 53, y+0, "orange_wool")
+    editor.set_block(x+2, 53, y+0, "orange_wool")
+    editor.set_block(x+1, 52, y+0, "orange_wool")
+    editor.set_block(x+0, 50, y+2, "orange_wool")
+    editor.set_block(x+1, 50, y+2, "orange_wool")
+    editor.set_block(x+2, 50, y+2, "orange_wool")
+
+    editor.set_block(x+1, 51, y+2, "redstone_wire", {"power": "0", "north": "side"})
+    editor.set_block(x+0, 52, y+1, "redstone_wire", {"power": "15", "north": "side"})
+    editor.set_block(x+2, 52, y+1, "redstone_wire", {"power": "15", "north": "side"})
+    editor.set_block(x+1, 53, y+0, "redstone_wire", {"power": "15", "north": "side"})
+
+    editor.set_block(x+0, 52, y+0, "redstone_torch")
+    editor.set_block(x+2, 52, y+0, "redstone_torch")
+
+    editor.set_block(x+0, 51, y+2, "redstone_wall_torch", {"lit": "false", "facing": "south"})
+    editor.set_block(x+2, 51, y+2, "redstone_wall_torch", {"lit": "false", "facing": "south"})
+    editor.set_block(x+1, 52, y+1, "redstone_wall_torch", {"lit": "false", "facing": "south"})
+    
+    # editor.set_block(0, 51, 0, "repeater", {"facing": "north", "delay": "1", "powered": "flase", "locked": "false"})
+    # editor.set_block(2, 51, 0, "repeater", {"facing": "north", "delay": "1", "powered": "flase", "locked": "false"})
 
 def not_gate(editor, x, y):
     editor.set_block(x+0, 50, y+0, "green_wool")
