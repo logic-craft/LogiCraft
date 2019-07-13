@@ -34,7 +34,7 @@
         @dragend="onLogicGateDragEnd(index)"
         @dragmove="event => onLogicGateDragMoved(event)"
         v-for="(logicGate, index) in logicGates"
-        v-bind:key="`${logicGate.logicType.name}${logicGate.position.x}${logicGate.position.y}`"
+        v-bind:key="`${index}${logicGate.logicType.name}${logicGate.position.x}${logicGate.position.y}`"
         :config="{
           drawBorder: true,
           width: padding * 4,
@@ -54,7 +54,7 @@
         />
 
         <v-line
-          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 2"
           :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
@@ -65,7 +65,18 @@
         />
 
         <v-line
-          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 2"
+          :config="{
+            x: logicGate.position.x,
+            y: logicGate.position.y,
+            points: [0, -padding, -padding, -padding],
+            stroke: 'black',
+            tension: 1
+          }"
+        />
+
+        <v-line
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 2"
           :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
@@ -76,30 +87,21 @@
         />
 
         <v-line
-          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1"
           :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
-            points: [0, -padding, -padding, -padding],
+            points: [0, 0, -padding, 0],
             stroke: 'black',
             tension: 1
           }"
         />
 
-        <v-circle 
-          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
-          :config="{
-            x: logicGate.position.x - padding,
-            y: logicGate.position.y + padding,
-            radius: padding / 4,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 1
-          }"
-        />
+
+
 
         <v-circle 
-          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 2"
           :config="{
             x: logicGate.position.x - padding,
             y: logicGate.position.y - padding,
@@ -108,10 +110,26 @@
             stroke: 'black',
             strokeWidth: 1
           }"
+          @click="logicGateCircleClicked(index, true, 0)"
         />
 
         <v-circle 
-          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 2"
+          :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y + padding,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+          @click="logicGateCircleClicked(index, true, 1)"
+        />
+
+
+
+        <v-circle 
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged)"
           :config="{
             x: logicGate.position.x + 3 * padding,
             y: logicGate.position.y,
@@ -120,11 +138,39 @@
             stroke: 'black',
             strokeWidth: 1
           }"
+          class="logic-gate-connector"
+          @click="logicGateCircleClicked(index, false)"
+        />
+
+        <v-circle 
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1"
+          :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+          class="logic-gate-connector"
+          @click="logicGateCircleClicked(index, true, 0)"
         />
 
 
 
+      <v-line
+          :config="{
+            points: calculateLinePath(input, index),
+            stroke: 'black',
+            tension: 1
+          }"
+          v-if="input"
+          v-for="(input, inputIndex) in logicGate.inputs"
+          v-bind:key="inputIndex"
+        />
       </v-group>
+
+ 
 
 
       <v-rect
@@ -176,7 +222,12 @@ export default {
         isShowingSnapBox: false,
         indexCurrentlyDragged: null,
         position: {x: 0, y: 0}
-      }
+      },
+      connector: {
+        connectorIndex: null,
+        isInput: null,
+        inputIndex: null
+      } 
     }
   },
   methods: {
@@ -186,7 +237,8 @@ export default {
         position: {
           x: this.configKonva.width / 2 - (this.padding / 2),
           y: this.configKonva.height / 2 - (this.padding / 2)
-        }
+        },
+        inputs: [null, null],
       });
     },
     onLogicGateDragged(index) {
@@ -207,6 +259,34 @@ export default {
     },
     mapSnapPosToDragPos(positionY) {
       return positionY + (this.padding * 1.5);
+    },
+    logicGateCircleClicked(index, isInput, currentInputIndex) {
+      if (this.connector.connectorIndex !== null) {
+        // Cannot connect input to input
+        if ((this.connector.isInput && isInput) || (!this.connector.isInput && !isInput)) {
+          return;
+        }
+
+        const logicGateInputIndex = this.connector.isInput ? this.connector.connectorIndex : index;
+        const logicGateOutputIndex = this.connector.isInput ? index : this.connector.connectorIndex;
+        const inputIndex = this.connector.inputIndex ? this.connector.inputIndex : currentInputIndex;
+
+        this.logicGates[logicGateInputIndex].inputs[inputIndex] = logicGateOutputIndex;
+        console.log(this.logicGates[logicGateInputIndex].inputs);
+        this.connector.connectorIndex = null;
+        this.connector.isInput = null;
+        this.connector.inputIndex = null;
+      } else {
+        this.connector.connectorIndex = index;
+        this.connector.isInput = isInput;
+        this.connector.inputIndex = currentInputIndex;
+      }
+    },
+    calculateLinePath(outputIndex, inputIndex) {
+      const startingPosition = this.logicGates[outputIndex].position;
+      const endingPosition = this.logicGates[inputIndex].position;
+      console.log("Need to go from", startingPosition, "to: ", endingPosition);
+      return [startingPosition.x, startingPosition.y, endingPosition.x, endingPosition.y];
     }
   }
 };
@@ -219,6 +299,10 @@ export default {
   }
 
   .logic-type {
+    cursor: pointer;
+  }
+
+  .logic-gate-connector {
     cursor: pointer;
   }
 </style>
