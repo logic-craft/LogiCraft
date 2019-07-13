@@ -358,10 +358,11 @@ export default {
             pathIntersection => pathIntersection / this.padding + 0.5
           );
 
+          
 
           return {
             id: input,
-            points: unpaddedPathIntersections
+            points: unpaddedPathIntersections.length ? [unpaddedPathIntersections] : []
           };
         });
 
@@ -372,18 +373,22 @@ export default {
         };
       });
 
-      console.log(logicGatesData);
-
-      const res = fetch("http://localhost:5000/api/schematic", {
+      const res = await fetch("http://localhost:5000/api/schematic", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify()
+        body: JSON.stringify(logicGatesData)
       });
 
-      const json = await res.json();
-      console.log(json);
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "level.zip";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();    
+      a.remove();  //afterward
     }
   }
 };
