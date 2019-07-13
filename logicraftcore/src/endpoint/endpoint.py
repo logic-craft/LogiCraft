@@ -9,6 +9,7 @@ from models.or_gate import Or
 from models.not_gate import Not 
 from models.light import Light
 from models.switch import Switch
+from models.xor_gate import Xor
 
 
 class Schematic(Resource):
