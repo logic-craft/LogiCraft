@@ -48,11 +48,3 @@ class Editor():
         """gets the corrrect section of the region"""
         #TODO: Actually fiquer this out
         return 1
-
-
-
-
-
-
-    
-
