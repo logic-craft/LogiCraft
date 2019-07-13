@@ -1,5 +1,9 @@
+from flask import request
 from flask_restful import Resource
 
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
+class Schematic(Resource):
+    def post(self):
+        req = request.get_json()
+        for key, value in req.items():
+            print(key)
+        return req
