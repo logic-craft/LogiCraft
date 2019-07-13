@@ -17,9 +17,13 @@ class Gate:
         return [self.coord[0] - 1, self.coord[1] + 2]
 
     def get_input_coord(self, coord_num=1):
+        if len(self.inputs) == 1:
+            return [self.coord[0] - 1, self.coord[1] + 1]
+
         if coord_num == 1:
             return self.get_input_1_coord()
-        elif coord_num == 2:
+
+        if coord_num == 2:
             return self.get_input_2_coord()
 
     def get_output_coord(self):
@@ -31,7 +35,7 @@ class Gate:
 
     def place_redstone(self):
         for _input in range(len(self.inputs)):
-            if _input == {}:
+            if _input == None:
                 continue
             points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(2)]
             
