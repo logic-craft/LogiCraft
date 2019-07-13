@@ -9,15 +9,13 @@
           strokeWidth: 1
         }"
         v-for="i in configKonva.width / padding"
-        v-bind:key="i" 
+        v-bind:key="`vertical${i}`" 
         />
 
         <v-line :config="{
           points: [0, 0, 10, 10],
         }"
         />
-        
-        
 
         <v-line :config="{
           points: [0, Math.round(j * padding), configKonva.width, Math.round(j * padding)],
@@ -25,8 +23,45 @@
           strokeWidth: 1
         }"
         v-for="j in configKonva.height / padding"
-        v-bind:key="j" 
+        v-bind:key="`horizontal${j}`" 
         />
+
+      </v-layer>
+
+      <v-layer>
+      <v-wedge
+        :config="{
+          radius: 1.5 * padding,
+          angle: 180,
+          rotation: -90,
+          fill: 'black',
+          x: logicGate.position.x,
+          y: logicGate.position.y,
+          draggable: true 
+        }"
+        v-for="(logicGate, index) in logicGates"
+        v-bind:key="`${logicGate.logicType.name}${logicGate.position.x}${logicGate.position.y}`"
+        @dragstart="onLogicGateDragged()"
+        @dragend="onLogicGateDragEnd(index)"
+        @dragmove="event => onLogicGateDragMoved(event)"
+      />
+
+
+      <v-rect
+        v-if="snapbox.isShowingSnapBox"
+        :config="{
+          x: snapbox.position.x,
+          y: snapbox.position.y,
+          width: 1.5 * padding,
+          height: 3 * padding,
+          fill: '#FF7B17',
+          opacity: 0.6,
+          stroke: '#CF6412',
+          strokeWidth: 3,
+          dash: [20, 2],
+        }"
+      />
+
 
       </v-layer>
     </v-stage>
@@ -35,7 +70,9 @@
       <img 
       :src="logicType.image"
       v-for="logicType in logicTypes"
-      v-bind:key="logicType"
+      v-bind:key="logicType.name"
+      @click="addLogicGateToGrid(logicType)"
+      class="logic-type"
       />
     </div>
   </div>
@@ -53,9 +90,42 @@ export default {
         name: "and",
         image: require("@/assets/andGate.svg")
       }],
-      padding: 20
+      padding: 20,
+      logicGates: [],
+      snapbox: {
+        isShowingSnapBox: false,
+        position: {x: 0, y: 0}
+      }
     }
-
+  },
+  methods: {
+    addLogicGateToGrid(logicType) {
+      this.logicGates.push({
+        logicType,
+        position: {
+          x: this.configKonva.width / 2 - (this.padding / 2),
+          y: this.configKonva.height / 2 
+        }
+      });
+    },
+    onLogicGateDragged() {
+      this.snapbox.isShowingSnapBox = true;
+    },
+    onLogicGateDragEnd(index) {
+      this.snapbox.isShowingSnapBox = false;
+      this.logicGates[index].position.x = this.snapbox.position.x;
+      this.logicGates[index].position.y = this.mapSnapPosToDragPos(this.snapbox.position.y);
+    },
+    onLogicGateDragMoved(event) {
+      this.snapbox.position.x = Math.round(event.target.x() / this.padding) * this.padding;
+      this.snapbox.position.y = this.mapWedgePosToSnapBox(Math.round(event.target.y() / this.padding) * this.padding);
+    },
+    mapWedgePosToSnapBox(positionY) {
+      return positionY - (this.padding * 1.5);
+    },
+    mapSnapPosToDragPos(positionY) {
+      return positionY + (this.padding * 1.5);
+    }
   }
 };
 </script>
@@ -64,5 +134,9 @@ export default {
 <style scoped>
   .grid {
     float: left;
+  }
+
+  .logic-type {
+    cursor: pointer;
   }
 </style>
