@@ -9,6 +9,7 @@ from models.or_gate import Or
 from models.not_gate import Not 
 from models.light import Light
 from models.switch import Switch
+from models.xor_gate import Xor
 
 
 class Schematic(Resource):
@@ -41,6 +42,9 @@ class Schematic(Resource):
 
             elif req[i]["type"] == "SWITCH":
                 gate = Switch(i, req[i]["inputs"], req[i]["coordinate"])
+            
+            elif req[i]["type"] == "XOR":
+                gate = Xor(i, req[i]["inputs"], req[i]["coordinate"])
 
             else:
                 return "bad request", 400
