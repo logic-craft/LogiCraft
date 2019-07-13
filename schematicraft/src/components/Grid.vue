@@ -35,17 +35,15 @@
           angle: 180,
           rotation: -90,
           fill: 'black',
-          stroke: 'black',
-          strokeWidth: 1,
           x: logicGate.position.x,
           y: logicGate.position.y,
           draggable: true 
         }"
         v-for="(logicGate, index) in logicGates"
         v-bind:key="`${logicGate.logicType.name}${logicGate.position.x}${logicGate.position.y}`"
-        @dragstart="onLogicGateDragged(index)"
+        @dragstart="onLogicGateDragged()"
         @dragend="onLogicGateDragEnd(index)"
-        @dragmove="event => onLogicGateDragMoved(event, index)"
+        @dragmove="event => onLogicGateDragMoved(event)"
       />
 
 
@@ -54,7 +52,7 @@
         :config="{
           x: snapbox.position.x,
           y: snapbox.position.y,
-          width: 3 * padding,
+          width: 2 * padding,
           height: 4 * padding,
           fill: '#FF7B17',
           opacity: 0.6,
@@ -105,21 +103,28 @@ export default {
       this.logicGates.push({
         logicType,
         position: {
-          x: this.configKonva.width / 2,
+          x: this.configKonva.width / 2 - (this.padding / 2),
           y: this.configKonva.height / 2
         }
       });
     },
-    onLogicGateDragged(index) {
-      console.log();
+    onLogicGateDragged() {
       this.snapbox.isShowingSnapBox = true;
     },
     onLogicGateDragEnd(index) {
       this.snapbox.isShowingSnapBox = false;
+      this.logicGates[index].position.x = this.snapbox.position.x;
+      this.logicGates[index].position.y = this.mapSnapPosToDragPos(this.snapbox.position.y);
     },
-    onLogicGateDragMoved(event, index) {
+    onLogicGateDragMoved(event) {
       this.snapbox.position.x = Math.round(event.target.x() / this.padding) * this.padding;
-      this.snapbox.position.y = Math.round(event.target.y() / this.padding) * this.padding;
+      this.snapbox.position.y = this.mapWedgePosToSnapBox(Math.round(event.target.y() / this.padding) * this.padding);
+    },
+    mapWedgePosToSnapBox(positionY) {
+      return positionY - (this.padding * 2);
+    },
+    mapSnapPosToDragPos(positionY) {
+      return positionY + (this.padding * 2);
     }
   }
 };
