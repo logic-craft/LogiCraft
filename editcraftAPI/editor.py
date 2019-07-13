@@ -79,9 +79,6 @@ class ChunkRow():
         """Sets block at keys index to given block"""
         (block_name, properties) = block_and_properties
         self.blocks[x] = Block(block_name, self._get_or_insert_palette(block_name, properties))
-        print(self.palette)
-        print(self.row_index)
-        print(self._calc_block_state(),2305843009213693952, sys.maxsize)
         print(len(str(self._calc_block_state())),len("2305843009213693952"), len(str(sys.maxsize)))
         self.region_nbt['Level']['Sections'][self.section_id]['BlockStates'][self.row_index] = self._calc_block_state()
 
@@ -102,14 +99,28 @@ class ChunkRow():
             raise ("Shit dont exist fam fix me up")
             #self._create_block_states()
             #row_state = 0
-        row_state = ("%0.16X" % row_state)[::-1]
+        print(row_state)
+        if (row_state < 0):
+            row_state -= (16**15*8)*-1
+            row_state = ("%0.16X" % row_state)
+            row_state =  row_state[::-1][1:] + ("%0.1X" % (int(row_state[0], 16) + 8))
+        else:
+            row_state = ("%0.16X" % row_state)[::-1]
+        print(row_state)
         return [Block(self.palette[int(palette_index, 16)], palette_index) for palette_index in row_state]
 
     def _calc_block_state(self):
         """Returns the value of the blockstate for tje chunk row"""
         state = "".join([block.palette_index for block in self.blocks[::-1]])
-        print(state[::-1])
-        return int(state, 16)
+        print(state)
+        heavy = int(state[0], 16)
+        if heavy < 8:
+            return int(state, 16)
+        else:
+            state = str(heavy - 8) + state[1:]
+            print(state, int(state, 16))
+            return int(state, 16) + (16**15*8)*-1
+
 
     def _get_or_insert_palette(self, block_name, properties):
         """Returns the id of the block in palette (inserts if doesnt alread exist)"""
