@@ -31,7 +31,7 @@
       <v-layer>
       <v-wedge
         :config="{
-          radius: 2 * padding,
+          radius: 1.5 * padding,
           angle: 180,
           rotation: -90,
           fill: 'black',
@@ -52,8 +52,8 @@
         :config="{
           x: snapbox.position.x,
           y: snapbox.position.y,
-          width: 2 * padding,
-          height: 4 * padding,
+          width: 1.5 * padding,
+          height: 3 * padding,
           fill: '#FF7B17',
           opacity: 0.6,
           stroke: '#CF6412',
@@ -104,7 +104,7 @@ export default {
         logicType,
         position: {
           x: this.configKonva.width / 2 - (this.padding / 2),
-          y: this.configKonva.height / 2
+          y: this.configKonva.height / 2 
         }
       });
     },
@@ -121,10 +121,10 @@ export default {
       this.snapbox.position.y = this.mapWedgePosToSnapBox(Math.round(event.target.y() / this.padding) * this.padding);
     },
     mapWedgePosToSnapBox(positionY) {
-      return positionY - (this.padding * 2);
+      return positionY - (this.padding * 1.5);
     },
     mapSnapPosToDragPos(positionY) {
-      return positionY + (this.padding * 2);
+      return positionY + (this.padding * 1.5);
     }
   }
 };
