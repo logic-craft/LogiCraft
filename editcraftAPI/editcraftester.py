@@ -1,3 +1,5 @@
+""" This iajust for testing"""
+
 import  sys
 from editor import Editor
 
@@ -10,7 +12,8 @@ def main(world_folder):
     not_gate(editor, 10, 0)
     switch(editor, 15, 0)
     light(editor, 20, 0)
-    xor_gate(editor, 25, 0)
+    xor_gate(editor, 30, 0)
+    d_flip_flop(editor, 25, 0)
     #checker(editor)
 
 def checker(editor):
@@ -24,6 +27,25 @@ def checker(editor):
     editor.set_block(15, 50, 7, "blue_wool")
     editor.set_block(14, 50, 6, "orange_wool")
     editor.set_block(14, 50, 7, "blue_wool")
+
+def d_flip_flop(editor, x, z):
+    editor.set_block(x+0, 50, z+0, "blue_wool")
+    editor.set_block(x+1, 50, z+0, "blue_wool")
+    editor.set_block(x+2, 50, z+0, "blue_wool")
+    editor.set_block(x+0, 50, z+1, "blue_wool")
+    editor.set_block(x+1, 50, z+1, "blue_wool")
+    editor.set_block(x+2, 50, z+1, "blue_wool")
+    editor.set_block(x+0, 50, z+2, "blue_wool")
+    editor.set_block(x+1, 50, z+2, "blue_wool")
+    editor.set_block(x+2, 50, z+2, "blue_wool")
+    editor.set_block(x+0, 51, z+2, "blue_wool")
+    
+    editor.set_block(x+0, 51, z+1, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
+    editor.set_block(x+1, 51, z+1, "repeater", {"facing": "east", "delay": "1", "powered": "false", "locked": "false"})
+
+
+
+
 
 def light (editor, x, y):
     editor.set_block(x+0, 50, y+0, "red_wool")

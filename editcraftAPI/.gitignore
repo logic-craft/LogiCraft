@@ -2,3 +2,4 @@ test.py
 virtualenv
 .vscode
 __pycache__
+*.pyc
