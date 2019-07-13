@@ -42,6 +42,9 @@ class Schematic(Resource):
 
             elif req[i]["type"] == "SWITCH":
                 gate = Switch(i, req[i]["inputs"], req[i]["coordinate"])
+            
+            elif req[i]["type"] == "XOR":
+                gate = Xor(i, req[i]["inputs"], req[i]["coordinate"])
 
             else:
                 return "bad request", 400
