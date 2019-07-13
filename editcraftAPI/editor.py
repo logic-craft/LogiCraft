@@ -106,7 +106,8 @@ class ChunkRow():
 
     def _calc_block_state(self):
         """Returns the value of the blockstate for tje chunk row"""
-        state = "".join([block.palette_index for block in self.blocks])
+        state = "".join([block.palette_index for block in self.blocks[::-1]])
+        print(state)
         return int(state, 16)
 
     def _get_or_insert_palette(self, block_name, properties):
