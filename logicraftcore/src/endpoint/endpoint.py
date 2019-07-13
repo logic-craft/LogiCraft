@@ -20,7 +20,7 @@ class Schematic(Resource):
         for i in range(len(req)):
             for j in range(len(req[i]["inputs"])):
                 coord = req[req[i]["inputs"][j]["id"]]["coordinate"]
-                req[i]["inputs"][j]["output"] = [coord[0] + 4, coord[1] + 1]
+                req[i]["inputs"][j]["output"] = [coord[0] + 3, coord[1] + 1]
                 print("yeet", req[i]["inputs"][j]["output"])
 
             if req[i]["type"] == "AND":

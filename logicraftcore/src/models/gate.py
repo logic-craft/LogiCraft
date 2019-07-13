@@ -11,10 +11,10 @@ class Gate:
         self.BASE_Y = 50
     
     def get_input_1_coord(self):
-        return [self.coord[0] - 1, self.coord[1] + 2]
+        return [self.coord[0] - 1, self.coord[1]]
 
     def get_input_2_coord(self):
-        return [self.coord[0] - 1, self.coord[1]]
+        return [self.coord[0] - 1, self.coord[1] + 2]
 
     def get_input_coord(self, coord_num=1):
         if coord_num == 1:
@@ -23,14 +23,16 @@ class Gate:
             return self.get_input_2_coord()
 
     def get_output_coord(self):
-        return [self.coord[0] + 4, self.coord[1] + 1]
+        return [self.coord[0] + 3, self.coord[1] + 1]
     
     def set_redstone(self, coord):
-        self.editor.set_block(coord[0], self.BASE_Y, coord[1], "red_wool")
-        self.editor.set_block(coord[0], self.BASE_Y + 1, coord[1], "redstone_wire")
+        self.editor.set_block(coord[1], self.BASE_Y, coord[0], "red_wool")
+        self.editor.set_block(coord[1], self.BASE_Y + 1, coord[0], "redstone_wire")
 
     def place_redstone(self):
         for _input in range(len(self.inputs)):
+            if _input == {}:
+                continue
             points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(2)]
             
             for i in range(len(points) - 1):
