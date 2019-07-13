@@ -8,7 +8,38 @@ def main(world_folder):
     and_gate(editor)
     or_gate(editor, 5, 0)
     not_gate(editor, 10, 0)
+    switch(editor, 15, 0)
+    #checker(editor)
+
+def checker(editor):
+    editor.set_block(15, 50, 0, "red_wool")
+    editor.set_block(15, 50, 1, "green_wool")
+    editor.set_block(15, 50, 2, "pink_wool")
+    editor.set_block(15, 50, 3, "gray_wool")
+    editor.set_block(15, 50, 4, "black_wool")
+    editor.set_block(15, 50, 5, "white_wool")
+    editor.set_block(15, 50, 6, "orange_wool")
+    editor.set_block(15, 50, 7, "blue_wool")
+    editor.set_block(14, 50, 6, "orange_wool")
+    editor.set_block(14, 50, 7, "blue_wool")
+
+def switch (editor, x, y):
+    editor.set_block(x+0, 50, y+0, "red_wool")
+    editor.set_block(x+1, 50, y+0, "red_wool")
+    editor.set_block(x+2, 50, y+0, "red_wool")
+    editor.set_block(x+0, 50, y+1, "red_wool")
+    editor.set_block(x+1, 50, y+1, "red_wool")
+    editor.set_block(x+2, 50, y+1, "red_wool")
+    editor.set_block(x+0, 50, y+2, "red_wool")
+    editor.set_block(x+1, 50, y+2, "red_wool")
+    editor.set_block(x+2, 50, y+2, "red_wool")
+    editor.set_block(x+1, 52, y+1, "red_wool")
     
+    editor.set_block(x+1, 52, y+0, "lever")
+
+    editor.set_block(x+1, 51, y+1, "redstone_wire", {"power": "0", "north": "side"})
+
+    editor.set_block(x+1, 51, y+2, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
 
 def not_gate(editor, x, y):
     editor.set_block(x+0, 50, y+0, "green_wool")
