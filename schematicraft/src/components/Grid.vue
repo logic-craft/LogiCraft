@@ -128,7 +128,7 @@
               :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
-            points: [0, 0, -padding, 0],
+            points: [0, 0, -1.5 * padding, 0],
             stroke: 'black',
           }"
             />
@@ -176,7 +176,7 @@
             <v-circle
               v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1"
               :config="{
-            x: logicGate.position.x - padding,
+            x: logicGate.position.x - 1.5 * padding,
             y: logicGate.position.y,
             radius: padding / 4,
             fill: 'red',
@@ -411,7 +411,13 @@ export default {
             endingPosition
           );
           const unpaddedPathIntersections = pathIntersections.map(
-            pathIntersection => pathIntersection / this.padding + 0.5
+            (pathIntersection, index) => {
+              const alteredPathIntersection = pathIntersection / this.padding + 0.5
+              if (index % 2 === 1) {
+                return this.configKonva.height / this.padding - alteredPathIntersection + 1;
+              }
+              return alteredPathIntersection
+            }
           );
 
           
@@ -425,9 +431,11 @@ export default {
         return {
           type: logicGate.logicType.name,
           inputs: transformedInputs,
-          coordinate: [(logicGate.position.x / this.padding), (logicGate.position.y / this.padding) + 1.5]
+          coordinate: [(logicGate.position.x / this.padding), this.configKonva.height / this.padding - ((logicGate.position.y / this.padding) + 1.5) + 1 ]
         };
       });
+
+      console.log(logicGatesData);
 
       const res = await fetch("http://localhost:5000/api/schematic", {
         method: "POST",
