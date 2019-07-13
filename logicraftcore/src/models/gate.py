@@ -42,30 +42,32 @@ class Gate:
             if self.inputs[_input] == None:
                 continue
              
-            points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(2)]
-            
+            points = [self.inputs[_input]["output"]] + self.inputs[_input]["points"] + [self.get_input_coord(_input + 1)]
             length = 0
             for i in range(len(points) - 1):
+                print("new point")
                 if points[i][0] == points[i + 1][0]:
-                    difference = points[i][1] - points[i + 1][1]
+                    difference = points[i + 1][1] - points[i][1]
                     multiplier = difference // abs(difference) # 1 or -1
                     for j in range(0, difference + multiplier, multiplier):
-                        point = [points[i + 1][0], points[i + 1][1] + j]
+                        point = [points[i][0], points[i][1] + j]
                         length += 1
-                        if length == 15 or (length == 14 and point in points):
-                            self.set_repeater(point, "east" if multiplier == 1 else "west")
+                        print("length5", length, point)
+                        if point not in points and (length > 12):
+                            self.set_repeater(point, "west" if multiplier == 1 else "east")
                             length = 0
                         else:
                             self.set_redstone(point)
 
                 elif points[i][1] == points[i + 1][1]:
-                    difference = points[i][0] - points[i + 1][0]
+                    difference = points[i + 1][0] - points[i][0]
                     multiplier = difference // abs(difference) # 1 or -1
                     for j in range(0, difference + multiplier, multiplier):
-                        point = [points[i + 1][0] + j, points[i + 1][1]]
-                        length + 1
-                        if length == 15 or (length == 14 and point in points):
-                            self.set_repeater(point, "south" if multiplier == 1 else "north")
+                        point = [points[i][0] + j, points[i][1]]
+                        length += 1
+                        print("length5", length, point)
+                        if point not in points and (length > 12):
+                            self.set_repeater(point, "north" if multiplier == 1 else "south")
                             length = 0
                         else:
                             self.set_redstone(point)

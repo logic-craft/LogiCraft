@@ -1,3 +1,5 @@
+""" This iajust for testing"""
+
 import  sys
 from editor import Editor
 
@@ -11,6 +13,7 @@ def main(world_folder):
     switch(editor, 15, 0)
     light(editor, 20, 0)
     xor_gate(editor, 25, 0)
+    #d_flip_flop(editor, 25, 0)
     #checker(editor)
 
 def checker(editor):
@@ -25,34 +28,62 @@ def checker(editor):
     editor.set_block(14, 50, 6, "orange_wool")
     editor.set_block(14, 50, 7, "blue_wool")
 
-def light (editor, x, y):
-    editor.set_block(x+0, 50, y+0, "red_wool")
-    editor.set_block(x+1, 50, y+0, "red_wool")
-    editor.set_block(x+2, 50, y+0, "red_wool")
-    editor.set_block(x+0, 50, y+1, "red_wool")
-    editor.set_block(x+1, 50, y+1, "red_wool")
-    editor.set_block(x+2, 50, y+1, "red_wool")
-    editor.set_block(x+0, 50, y+2, "red_wool")
-    editor.set_block(x+1, 50, y+2, "red_wool")
-    editor.set_block(x+2, 50, y+2, "red_wool")
+def d_flip_flop(editor, x, z):
+    editor.set_block(x+0, 50, z+0, "blue_wool")
+    editor.set_block(x+1, 50, z+0, "blue_wool")
+    editor.set_block(x+2, 50, z+0, "blue_wool")
+    editor.set_block(x+0, 50, z+1, "blue_wool")
+    editor.set_block(x+1, 50, z+1, "blue_wool")
+    editor.set_block(x+2, 50, z+1, "blue_wool")
+    editor.set_block(x+0, 50, z+2, "blue_wool")
+    editor.set_block(x+1, 50, z+2, "blue_wool")
+    editor.set_block(x+2, 50, z+2, "blue_wool")
+    editor.set_block(x+0, 51, z+2, "blue_wool")
     
-    editor.set_block(x+1, 51, y+1, "redstone_lamp")
+    editor.set_block(x+0, 51, z+1, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
+    editor.set_block(x+1, 51, z+1, "repeater", {"facing": "east", "delay": "1", "powered": "false", "locked": "false"})
+
+
+
+
+
+def light (editor, x, y):
+    editor.set_block(x+0, 50, y+0, "gray_wool")
+    editor.set_block(x+1, 50, y+0, "gray_wool")
+    editor.set_block(x+2, 50, y+0, "gray_wool")
+    editor.set_block(x+0, 50, y+1, "gray_wool")
+    editor.set_block(x+1, 50, y+1, "gray_wool")
+    editor.set_block(x+2, 50, y+1, "gray_wool")
+    editor.set_block(x+0, 50, y+2, "gray_wool")
+    editor.set_block(x+1, 50, y+2, "gray_wool")
+    editor.set_block(x+2, 50, y+2, "gray_wool")
+    
+    editor.set_block(x+1, 51, y+1, "gray_wool")
+    editor.set_block(x+1, 53, y+1, "gray_wool")
+
+    editor.set_block(x+1, 52, y+1, "redstone_torch")
+    editor.set_block(x+1, 54, y+1, "redstone_torch", {"lit": "false"})
+    editor.set_block(x+1, 55, y+1, "redstone_lamp")
+    editor.set_block(x+0, 54, y+1, "redstone_lamp")
+    editor.set_block(x+2, 54, y+1, "redstone_lamp")
+    editor.set_block(x+1, 54, y+0, "redstone_lamp")
+    editor.set_block(x+1, 54, y+2, "redstone_lamp")
 
     editor.set_block(x+1, 51, y+2, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
     editor.set_block(x+1, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
 
 
 def switch (editor, x, y):
-    editor.set_block(x+0, 50, y+0, "red_wool")
-    editor.set_block(x+1, 50, y+0, "red_wool")
-    editor.set_block(x+2, 50, y+0, "red_wool")
-    editor.set_block(x+0, 50, y+1, "red_wool")
-    editor.set_block(x+1, 50, y+1, "red_wool")
-    editor.set_block(x+2, 50, y+1, "red_wool")
-    editor.set_block(x+0, 50, y+2, "red_wool")
-    editor.set_block(x+1, 50, y+2, "red_wool")
-    editor.set_block(x+2, 50, y+2, "red_wool")
-    editor.set_block(x+1, 52, y+1, "red_wool")
+    editor.set_block(x+0, 50, y+0, "light_blue_wool")
+    editor.set_block(x+1, 50, y+0, "light_blue_wool")
+    editor.set_block(x+2, 50, y+0, "light_blue_wool")
+    editor.set_block(x+0, 50, y+1, "light_blue_wool")
+    editor.set_block(x+1, 50, y+1, "light_blue_wool")
+    editor.set_block(x+2, 50, y+1, "light_blue_wool")
+    editor.set_block(x+0, 50, y+2, "light_blue_wool")
+    editor.set_block(x+1, 50, y+2, "light_blue_wool")
+    editor.set_block(x+2, 50, y+2, "light_blue_wool")
+    editor.set_block(x+1, 52, y+1, "light_blue_wool")
     
     editor.set_block(x+1, 52, y+0, "lever")
 
