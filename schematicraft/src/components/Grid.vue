@@ -50,7 +50,46 @@
             draggable: true,
             x: logicGate.position.x,
             y: logicGate.position.y
-          }" />
+          }" 
+          v-if="logicGate.logicType.name === 'AND'"
+          />
+
+            <v-line :config="{
+              x: logicGate.position.x,
+              y: logicGate.position.y,
+              points: [0.2 * padding, 0, 0, padding, 1.5 * padding, 0, 0, -padding],
+              stroke: 'black',
+              closed: true,
+              tension: 0.5,
+              draggable: true
+            }" 
+               v-if="logicGate.logicType.name === 'OR'"
+          />
+
+            <v-line :config="{
+              x: logicGate.position.x,
+              y: logicGate.position.y,
+              points: [0, padding, 1 * padding, 0, 0, -padding],
+              stroke: 'black',
+              closed: true,
+              draggable: true
+            }" 
+            v-if="logicGate.logicType.name === 'NOT'"
+          />
+
+            <v-circle
+              :config="{
+            x: logicGate.position.x + (1.3 * padding),
+            y: logicGate.position.y,
+            radius: padding / 4,
+            stroke: 'black',
+            strokeWidth: 2
+          }"
+          v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'NOT'"
+          />
+ 
+
+          
 
             <v-line
               v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged)"
@@ -61,6 +100,8 @@
             stroke: 'black',
           }"
             />
+
+
 
             <v-line
               v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 2"
@@ -176,13 +217,17 @@
       </v-stage>
     </div>
     <div>
+      
       <img
         :src="logicType.image"
         v-for="logicType in logicTypes"
         v-bind:key="logicType.name"
         @click="addLogicGateToGrid(logicType)"
         class="logic-type"
+        width="200px"
       />
+
+      
 
       <button @click="downloadSchematic()">Download Schematic</button>
     </div>
@@ -200,7 +245,18 @@ export default {
       logicTypes: [
         {
           name: "AND",
-          image: require("@/assets/andGate.svg")
+          image: require("@/assets/andGate.svg"),
+          amountOfInputs: 2
+        },
+        {
+          name: "OR",
+          image: require("@/assets/orGate.svg"),
+          amountOfInputs: 2
+        },
+        {
+          name: "NOT",
+          image: require("@/assets/notGate.svg"),
+          amountOfInputs: 1
         }
       ],
       padding: 20,
@@ -225,7 +281,7 @@ export default {
           x: this.configKonva.width / 2 - this.padding / 2,
           y: this.configKonva.height / 2 - this.padding / 2
         },
-        inputs: [null, null]
+        inputs: logicType.amountOfInputs == 2 ? [null, null] : [null]
       });
     },
     onLogicGateDragged(index) {
