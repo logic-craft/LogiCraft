@@ -65,6 +65,28 @@
                v-if="logicGate.logicType.name === 'OR'"
           />
 
+          <v-line :config="{
+              x: logicGate.position.x,
+              y: logicGate.position.y,
+              points: [0.2 * padding, 0, 0, padding, 1.5 * padding, 0, 0, -padding],
+              stroke: 'black',
+              closed: true,
+              tension: 0.5,
+              draggable: true
+            }" 
+               v-if="logicGate.logicType.name === 'XOR'"
+          />
+
+          <v-line :config="{
+              x: logicGate.position.x,
+              y: logicGate.position.y,
+              points: [-0.4 * padding, -padding, 0 * padding, 0, -0.4 * padding, padding],
+              stroke: 'black',
+              tension: 0.5,
+          }" 
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'XOR'"
+          />
+
             <v-line :config="{
               x: logicGate.position.x,
               y: logicGate.position.y,
@@ -390,6 +412,12 @@ export default {
         image: require("@/assets/power.jpg"),
         amountOfInputs: 0,
         width: "90px"
+      },
+      {
+        name: "XOR",
+        image: require("@/assets/xorGate.svg"),
+        amountOfInputs: 2,
+        width: "150px"
       }
       ],
       padding: 20,
