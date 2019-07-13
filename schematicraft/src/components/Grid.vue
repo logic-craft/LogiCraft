@@ -30,7 +30,7 @@
 
     <v-layer>
       <v-group
-        @dragstart="onLogicGateDragged()"
+        @dragstart="onLogicGateDragged(index)"
         @dragend="onLogicGateDragEnd(index)"
         @dragmove="event => onLogicGateDragMoved(event)"
         v-for="(logicGate, index) in logicGates"
@@ -54,7 +54,7 @@
         />
 
         <v-line
-          v-if="!snapbox.isShowingSnapBox"
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
           :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
@@ -65,7 +65,7 @@
         />
 
         <v-line
-          v-if="!snapbox.isShowingSnapBox"
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
           :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
@@ -76,13 +76,49 @@
         />
 
         <v-line
-          v-if="!snapbox.isShowingSnapBox"
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
           :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
             points: [0, -padding, -padding, -padding],
             stroke: 'black',
             tension: 1
+          }"
+        />
+
+        <v-circle 
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y + padding,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+        />
+
+        <v-circle 
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y - padding,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+        />
+
+        <v-circle 
+          v-if="!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged"
+          :config="{
+            x: logicGate.position.x + 3 * padding,
+            y: logicGate.position.y,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
           }"
         />
 
@@ -138,6 +174,7 @@ export default {
       logicGates: [],
       snapbox: {
         isShowingSnapBox: false,
+        indexCurrentlyDragged: null,
         position: {x: 0, y: 0}
       }
     }
@@ -152,8 +189,9 @@ export default {
         }
       });
     },
-    onLogicGateDragged() {
+    onLogicGateDragged(index) {
       this.snapbox.isShowingSnapBox = true;
+      this.snapbox.indexCurrentlyDragged = index;
     },
     onLogicGateDragEnd(index) {
       this.snapbox.isShowingSnapBox = false;
