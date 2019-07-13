@@ -11,8 +11,7 @@
         }"
             v-for="i in configKonva.width / padding"
             v-bind:key="`vertical${i}`"
-          />
-
+        
           <v-line :config="{
           points: [0, 0, 10, 10],
         }" />
@@ -278,18 +277,29 @@
     </div>
     <div>
       
-      <img
-        :src="logicType.image"
-        v-for="logicType in logicTypes"
-        v-bind:key="logicType.name"
-        @click="addLogicGateToGrid(logicType)"
-        class="logic-type"
-        width="200px"
-      />
+      <div v-for="logicType in logicTypes" :key="logicType.name">
+        <img
+            :src="logicType.image"
+            @click="addLogicGateToGrid(logicType)"
+            class="logic-type"
+            :width="logicType.width"
+        />
+      </div>
 
-      
+      <button class="uk-button uk-button-primary side-btns" uk-toggle="target: #modal">Instructions</button>
+      <button class="uk-button uk-button-secondary side-btns" @click="downloadSchematic()">Download</button><br />
 
-      <button @click="downloadSchematic()">Download Schematic</button>
+      <div id="modal" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body modal-body">
+            <h1>Instructions</h1>
+            <h2>Logic Gates</h2>
+            <img :src="require('@/assets/lg_cheatsheet.jpg')"/>
+            <h2>Adding World to Minecraft</h2>
+            
+            <button class="uk-modal-close uk-button uk-button-primary" type="button">Got it!</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -306,23 +316,27 @@ export default {
         {
           name: "AND",
           image: require("@/assets/andGate.svg"),
-          amountOfInputs: 2
+          amountOfInputs: 2,
+          width: "150px",
         },
         {
           name: "OR",
           image: require("@/assets/orGate.svg"),
-          amountOfInputs: 2
+          amountOfInputs: 2,
+          width: "150px",
         },
         {
           name: "NOT",
           image: require("@/assets/notGate.svg"),
-          amountOfInputs: 1
+          amountOfInputs: 1,
+          width: "150px",
         },
 
       {
         name: "BULB",
         image: require("@/assets/lightBulb.webp"),
-        amountOfInputs: 1
+        amountOfInputs: 1,
+        width: "100px",
       }
       ],
       padding: 20,
@@ -537,5 +551,14 @@ export default {
 
 .logic-gate-connector {
   cursor: pointer;
+}
+
+.side-btns {
+  width: 210px;
+  margin-top: 20px;
+}
+
+.modal-body {
+  width: 800px;
 }
 </style>
