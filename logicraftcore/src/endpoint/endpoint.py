@@ -7,6 +7,8 @@ sys.path.append(os.path.abspath(os.path.join('../../')))
 from models.and_gate import And
 from models.or_gate import Or
 from models.not_gate import Not 
+from models.light import Light
+from models.switch import Switch
 
 
 class Schematic(Resource):
@@ -20,7 +22,7 @@ class Schematic(Resource):
         for i in range(len(req)):
             for j in range(len(req[i]["inputs"])):
                 coord = req[req[i]["inputs"][j]["id"]]["coordinate"]
-                req[i]["inputs"][j]["output"] = [coord[0] + 4, coord[1] + 1]
+                req[i]["inputs"][j]["output"] = [coord[0] + 3, coord[1] + 1]
                 print("yeet", req[i]["inputs"][j]["output"])
 
             if req[i]["type"] == "AND":
@@ -31,6 +33,12 @@ class Schematic(Resource):
 
             elif req[i]["type"] == "NOT":
                 gate = Not(i, req[i]["inputs"], req[i]["coordinate"])
+
+            elif req[i]["type"] == "LIGHT":
+                gate = Light(i, req[i]["inputs"], req[i]["coordinate"])
+
+            elif req[i]["type"] == "SWITCH":
+                gate = Switch(i, req[i]["inputs"], req[i]["coordinate"])
 
             else:
                 return "bad request", 400

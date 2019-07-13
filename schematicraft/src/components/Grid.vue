@@ -92,11 +92,21 @@
           
 
             <v-line
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged)"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name !== 'BULB'"
               :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
             points: [1.5 * padding, 0, 2.5 * padding, 0],
+            stroke: 'black',
+          }"
+            />
+
+            <v-line
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'BULB'"
+              :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y,
+            points: [3 * padding, 0, 3.5 * padding, 0],
             stroke: 'black',
           }"
             />
@@ -124,11 +134,21 @@
             />
 
             <v-line
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1 && logicGate.logicType.name !== 'BULB'"
               :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
             points: [0, 0, -1.5 * padding, 0],
+            stroke: 'black',
+          }"
+            />
+
+            <v-line
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1 && logicGate.logicType.name === 'BULB'"
+              :config="{
+            x: logicGate.position.x - padding,
+            y: logicGate.position.y,
+            points: [0, 0, -0.5 * padding, 0],
             stroke: 'black',
           }"
             />
@@ -160,7 +180,7 @@
             />
 
             <v-circle
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged)"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name !== 'BULB'"
               :config="{
             x: logicGate.position.x + 2.5 * padding,
             y: logicGate.position.y,
@@ -174,7 +194,35 @@
             />
 
             <v-circle
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'BULB'"
+              :config="{
+            x: logicGate.position.x + 2.5 * padding,
+            y: logicGate.position.y,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+              class="logic-gate-connector"
+              @click="logicGateCircleClicked(index, false)"
+            />
+
+            <v-circle
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1 && logicGate.logicType.name !== 'BULB'"
+              :config="{
+            x: logicGate.position.x - 1.5 * padding,
+            y: logicGate.position.y,
+            radius: padding / 4,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 1
+          }"
+              class="logic-gate-connector"
+              @click="logicGateCircleClicked(index, true, 0)"
+            />
+
+            <v-circle
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1 && logicGate.logicType.name === 'BULB'"
               :config="{
             x: logicGate.position.x - 1.5 * padding,
             y: logicGate.position.y,
@@ -195,6 +243,18 @@
               v-if="input !== null"
               v-for="(input, inputIndex) in logicGate.inputs"
               v-bind:key="inputIndex"
+            />
+
+            <v-circle 
+            :config="{
+              x: logicGate.position.x + 0.5 * padding,
+              y: logicGate.position.y,
+              radius: 1.5 * padding,
+              stroke: 'black',
+              strokeWidth: 2,
+              draggable: true
+            }"
+            v-if="logicGate.logicType.name === 'BULB'"
             />
           </v-group>
 
@@ -257,7 +317,13 @@ export default {
           name: "NOT",
           image: require("@/assets/notGate.svg"),
           amountOfInputs: 1
-        }
+        },
+
+      {
+        name: "BULB",
+        image: require("@/assets/lightBulb.webp"),
+        amountOfInputs: 1
+      }
       ],
       padding: 20,
       logicGates: [],
@@ -344,7 +410,7 @@ export default {
         this.connector.inputIndex = currentInputIndex;
       }
     },
-    getPathIntesections(startingPosition, endingPosition) {
+    getPathIntesections(startingPosition, endingPosition, ) {
       console.log(startingPosition);
       console.log(endingPosition);
       if (
@@ -353,6 +419,7 @@ export default {
       ) {
         return [];
       } else {
+        
         return [endingPosition.x - 1.5 * this.padding, startingPosition.y];
       }
     },
