@@ -9,6 +9,7 @@ def main(world_folder):
     or_gate(editor, 5, 0)
     not_gate(editor, 10, 0)
     switch(editor, 15, 0)
+    light(editor, 20, 0)
     #checker(editor)
 
 def checker(editor):
@@ -22,6 +23,23 @@ def checker(editor):
     editor.set_block(15, 50, 7, "blue_wool")
     editor.set_block(14, 50, 6, "orange_wool")
     editor.set_block(14, 50, 7, "blue_wool")
+
+def light (editor, x, y):
+    editor.set_block(x+0, 50, y+0, "red_wool")
+    editor.set_block(x+1, 50, y+0, "red_wool")
+    editor.set_block(x+2, 50, y+0, "red_wool")
+    editor.set_block(x+0, 50, y+1, "red_wool")
+    editor.set_block(x+1, 50, y+1, "red_wool")
+    editor.set_block(x+2, 50, y+1, "red_wool")
+    editor.set_block(x+0, 50, y+2, "red_wool")
+    editor.set_block(x+1, 50, y+2, "red_wool")
+    editor.set_block(x+2, 50, y+2, "red_wool")
+    
+    editor.set_block(x+1, 51, y+1, "redstone_lamp")
+
+    editor.set_block(x+1, 51, y+2, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
+    editor.set_block(x+1, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
+
 
 def switch (editor, x, y):
     editor.set_block(x+0, 50, y+0, "red_wool")
