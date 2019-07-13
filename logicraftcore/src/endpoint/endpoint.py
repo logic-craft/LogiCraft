@@ -15,13 +15,13 @@ class Schematic(Resource):
         os.system("cp -R ../maps/LogiCraft ../maps/LogiCraftCopy")
 
         req = request.get_json()
-        print(req[0]["coordinate"])
+        print("yah", req[0]["coordinate"])
         
         for i in range(len(req)):
             for j in range(len(req[i]["inputs"])):
                 coord = req[req[i]["inputs"][j]["id"]]["coordinate"]
                 req[i]["inputs"][j]["output"] = [coord[0] + 4, coord[1] + 1]
-                print(req[i]["inputs"][j]["output"])
+                print("yeet", req[i]["inputs"][j]["output"])
 
             if req[i]["type"] == "AND":
                 gate = And(i, req[i]["inputs"], req[i]["coordinate"]) 
@@ -38,9 +38,8 @@ class Schematic(Resource):
             gate.place_redstone() 
             gate.place_gate()
 
-
-        # os.system("cd ../maps/LogiCraftCopy; zip -r ../LogiCraftCopy.zip *")
-        # os.system("rm -r ../maps/LogiCraftCopy")
-        # map_file = send_from_directory("../maps/", "LogiCraftCopy.zip", as_attachment=True)
-        # os.system("rm ../maps/LogiCraftCopy.zip")
-        # return map_file
+        os.system("cd ../maps/LogiCraftCopy; zip -r ../LogiCraftCopy.zip *")
+        os.system("rm -r ../maps/LogiCraftCopy")
+        map_file = send_from_directory("../maps/", "LogiCraftCopy.zip", as_attachment=True)
+        os.system("rm ../maps/LogiCraftCopy.zip")
+        return map_file

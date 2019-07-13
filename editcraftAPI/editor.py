@@ -1,5 +1,6 @@
 import os
 import nbt
+import sys
 from nbt.chunk import *
 from nbt.world import WorldFolder
 from nbt.nbt import *
@@ -78,10 +79,8 @@ class ChunkRow():
         """Sets block at keys index to given block"""
         (block_name, properties) = block_and_properties
         self.blocks[x] = Block(block_name, self._get_or_insert_palette(block_name, properties))
-
         print(self.palette)
-        print(x)
-        print(self.row_index)
+        print(self._calc_block_state(), sys.maxsize)
         self.region_nbt['Level']['Sections'][self.section_id]['BlockStates'][self.row_index] = self._calc_block_state()
 
     def _read_palette(self):
@@ -102,23 +101,47 @@ class ChunkRow():
             #self._create_block_states()
             #row_state = 0
         row_state = ("%0.16X" % row_state)[::-1]
-        print([(int(palette_index, 16), palette_index) for palette_index in row_state])
         return [Block(self.palette[int(palette_index, 16)], palette_index) for palette_index in row_state]
 
     def _calc_block_state(self):
         """Returns the value of the blockstate for tje chunk row"""
         state = "".join([block.palette_index for block in self.blocks[::-1]])
-        print(state)
         return int(state, 16)
 
     def _get_or_insert_palette(self, block_name, properties):
         """Returns the id of the block in palette (inserts if doesnt alread exist)"""
         try:
-            return "%0.1X" % (self.palette.index(block_name))
+            return self._match_palette(block_name, properties)
         except ValueError:
             self._add_to_palette(block_name, properties)
-            self.palette.append(block_name)
+            self.palette.insert(2, block_name)
+            for i, block in enumerate(self.blocks):
+                if int(block.palette_index, 16) >= 2:
+                    block.palette_index = "%0.1X" % (int(block.palette_index, 16) + 1)
+                    self.blocks[i] =  block
             return "%0.1X" % (len(self.palette) - 1)
+
+    def _match_palette(self, block_name, properties):
+        """Matches block in palette"""
+        for  pal_index in [i for i, pal in enumerate(self.palette) if pal == block_name]:
+            if properties == None:
+                return "%0.1X" % pal_index
+            isMatch = True
+            for k, v in properties.items():
+                try:
+                    if self.region_nbt['Level']['Sections'][self.section_id]['Palette'][pal_index]['Properties'][k].value != v:
+                        isMatch = False
+                        
+                        print(k,v,self.region_nbt['Level']['Sections'][self.section_id]['Palette'][pal_index]['Properties'][k])
+                        break
+                except KeyError:
+                    isMatch = False
+                    break
+            if isMatch:
+                return "%0.1X" % pal_index
+        raise ValueError("No match")
+        
+
 
     # def _create_block_states(self):
     #     """Creates the blockstate array"""
@@ -135,15 +158,15 @@ class ChunkRow():
         """Adds a block into the nbt palette"""
         if "Palette" not in self.region_nbt['Level']['Sections'][self.section_id]:
             self.region_nbt['Level']['Sections'][self.section_id]["Palette"] = TAG_List(name="Palette", type=TAG_Compound)
-        self.region_nbt['Level']['Sections'][self.section_id]['Palette'].append(TAG_Compound())
-        self.region_nbt['Level']['Sections'][self.section_id]['Palette'][-1].tags.append(TAG_String(name="Name",value="minecraft:" + block_name))
+        self.region_nbt['Level']['Sections'][self.section_id]['Palette'].insert(2, TAG_Compound())
+        self.region_nbt['Level']['Sections'][self.section_id]['Palette'][2].tags.append(TAG_String(name="Name",value="minecraft:" + block_name))
         #####This is to add properties when we need them #####
         if properties is not None:
             properties_tag=TAG_Compound()
             properties_tag.name="Properties"
             for k,v in properties.items():
                 properties_tag.tags.append(TAG_String(name=k,value=v))
-            self.region_nbt['Level']['Sections'][self.section_id]['Palette'].tags[-1].tags.append(properties_tag)
+            self.region_nbt['Level']['Sections'][self.section_id]['Palette'].tags[2].tags.append(properties_tag)
 
 
 
