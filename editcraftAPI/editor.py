@@ -161,24 +161,15 @@ class ChunkRow():
         """Adds a block into the nbt palette"""
         if "Palette" not in self.region_nbt['Level']['Sections'][self.section_id]:
             self.region_nbt['Level']['Sections'][self.section_id]["Palette"] = TAG_List(name="Palette", type=TAG_Compound)
-<<<<<<< HEAD
         self.region_nbt['Level']['Sections'][self.section_id]['Palette'].append(TAG_Compound())
         self.region_nbt['Level']['Sections'][self.section_id]['Palette'][-1].tags.append(TAG_String(name="Name",value="minecraft:" + block_name))
-=======
-        self.region_nbt['Level']['Sections'][self.section_id]['Palette'].insert(2, TAG_Compound())
-        self.region_nbt['Level']['Sections'][self.section_id]['Palette'][2].tags.append(TAG_String(name="Name",value="minecraft:" + block_name))
->>>>>>> 1a4bdc4c98f6fd7b21693d943493c373939cf51d
         #####This is to add properties when we need them #####
         if properties is not None:
             properties_tag=TAG_Compound()
             properties_tag.name="Properties"
             for k,v in properties.items():
                 properties_tag.tags.append(TAG_String(name=k,value=v))
-<<<<<<< HEAD
             self.region_nbt['Level']['Sections'][self.section_id]['Palette'].tags[-1].tags.append(properties_tag)
-=======
-            self.region_nbt['Level']['Sections'][self.section_id]['Palette'].tags[2].tags.append(properties_tag)
->>>>>>> 1a4bdc4c98f6fd7b21693d943493c373939cf51d
 
 
 

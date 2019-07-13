@@ -6,13 +6,25 @@ def main(world_folder):
     editor = Editor(world_folder)
     print(editor.get_block_name(1, 120, 3))
     and_gate(editor)
-    or_gate(editor, 10, 0)
-    not_gate(editor, 15, 0)
+    or_gate(editor, 5, 0)
+    not_gate(editor, 10, 0)
     
 
 def not_gate(editor, x, y):
     editor.set_block(x+0, 50, y+0, "green_wool")
     editor.set_block(x+1, 50, y+0, "green_wool")
+    editor.set_block(x+2, 50, y+0, "green_wool")
+    editor.set_block(x+0, 50, y+1, "green_wool")
+    editor.set_block(x+1, 50, y+1, "green_wool")
+    editor.set_block(x+2, 50, y+1, "green_wool")
+    editor.set_block(x+0, 50, y+2, "green_wool")
+    editor.set_block(x+1, 50, y+2, "green_wool")
+    editor.set_block(x+2, 50, y+2, "green_wool")
+    editor.set_block(x+1, 51, y+1, "green_wool")
+
+    editor.set_block(x+1, 51, y+2, "redstone_wall_torch", {"lit": "true", "facing": "south"})
+
+    editor.set_block(x+1, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "false", "locked": "false"})
     
 
 def or_gate(editor, x, y):
@@ -32,7 +44,7 @@ def or_gate(editor, x, y):
     
     editor.set_block(x+0, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "flase", "locked": "false"})
     editor.set_block(x+2, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "flase", "locked": "false"})
-    editor.set_block(x+1, 51, y+0, "repeater", {"facing": "north", "delay": "1", "powered": "flase", "locked": "false"})
+    editor.set_block(x+1, 51, y+2, "repeater", {"facing": "north", "delay": "1", "powered": "flase", "locked": "false"})
 
 def and_gate(editor):
     editor.set_block(0, 50, 0, "yellow_wool")
