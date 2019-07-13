@@ -22,6 +22,8 @@ class Schematic(Resource):
         
         for i in range(len(req)):
             for j in range(len(req[i]["inputs"])):
+                if req[i]["inputs"][j] == None:
+                    continue
                 coord = req[req[i]["inputs"][j]["id"]]["coordinate"]
                 req[i]["inputs"][j]["output"] = [coord[0] + 3, coord[1] + 1]
                 print("yeet", req[i]["inputs"][j]["output"])

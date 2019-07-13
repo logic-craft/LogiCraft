@@ -1,6 +1,6 @@
 from models.gate import Gate
 
-class Light(Gate):
+class Switch(Gate):
 
     def place_gate(self):
         x = self.coord[0]

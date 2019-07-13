@@ -12,7 +12,6 @@
             v-for="i in configKonva.width / padding"
             v-bind:key="`vertical${i}`"
           />
-
           <v-line :config="{
           points: [0, 0, 10, 10],
         }" />
@@ -46,8 +45,8 @@
             radius: 1.5 * padding,
             angle: 180,
             rotation: -90,
-            fill: 'black',
             draggable: true,
+            stroke: 'black',
             x: logicGate.position.x,
             y: logicGate.position.y
           }" 
@@ -92,7 +91,7 @@
           
 
             <v-line
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name !== 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name !== 'LIGHT' && logicGate.logicType.name !== 'SWITCH'"
               :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
@@ -102,7 +101,7 @@
             />
 
             <v-line
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && (logicGate.logicType.name === 'LIGHT' || logicGate.logicType.name === 'SWITCH')"
               :config="{
             x: logicGate.position.x - padding,
             y: logicGate.position.y,
@@ -110,6 +109,19 @@
             stroke: 'black',
           }"
             />
+
+            <v-line
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'SWITCH'"
+              :config="{
+                x: logicGate.position.x + padding / 2,
+                y: logicGate.position.y,
+                points: [0, 0, 0, -2 * padding],
+                stroke: 'black',
+              }"
+            />
+
+
+
 
 
 
@@ -134,7 +146,7 @@
             />
 
             <v-line
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1 && logicGate.logicType.name !== 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1 && logicGate.logicType.name !== 'LIGHT' && logicGate.logicType.name !== 'SWITCH'"
               :config="{
             x: logicGate.position.x,
             y: logicGate.position.y,
@@ -144,7 +156,30 @@
             />
 
             <v-line
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1 && logicGate.logicType.name === 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'LIGHT'"
+              :config="{
+            x: logicGate.position.x - 0.6 * padding,
+            y: logicGate.position.y - 1.1 * padding,
+            points: [0, 0, padding * 2.1, padding * 2.1],
+            stroke: 'black',
+          }"
+            />
+
+            <v-line
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'LIGHT'"
+              :config="{
+            x: logicGate.position.x + 1.6 * padding,
+            y: logicGate.position.y - 1.1 * padding,
+            points: [0, 0, -2.1 * padding, padding * 2.1],
+            stroke: 'black',
+          }"
+            />
+
+
+
+
+            <v-line
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length === 1 && (logicGate.logicType.name === 'LIGHT')"
               :config="{
             x: logicGate.position.x - padding,
             y: logicGate.position.y,
@@ -159,11 +194,13 @@
             x: logicGate.position.x - (1.5 * padding),
             y: logicGate.position.y - padding,
             radius: padding / 4,
-            fill: 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === 0 ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
               @click="logicGateCircleClicked(index, true, 0)"
+              @mouseover="onCircleHover"
+              @mouseleave="onCircleHoverOut"
             />
 
             <v-circle
@@ -172,7 +209,7 @@
             x: logicGate.position.x - (1.5 * padding),
             y: logicGate.position.y + padding,
             radius: padding / 4,
-            fill: 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === 1 ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
@@ -180,12 +217,12 @@
             />
 
             <v-circle
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name !== 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name !== 'LIGHT' && logicGate.logicType.name !== 'SWITCH'"
               :config="{
             x: logicGate.position.x + 2.5 * padding,
             y: logicGate.position.y,
             radius: padding / 4,
-            fill: 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === undefined ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
@@ -194,12 +231,12 @@
             />
 
             <v-circle
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.logicType.name === 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && (logicGate.logicType.name === 'LIGHT' || logicGate.logicType.name === 'SWITCH')"
               :config="{
             x: logicGate.position.x + 2.5 * padding,
             y: logicGate.position.y,
             radius: padding / 4,
-            fill: 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === null ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
@@ -208,12 +245,12 @@
             />
 
             <v-circle
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1 && logicGate.logicType.name !== 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1 && logicGate.logicType.name !== 'LIGHT' && logicGate.logicType.name !== 'SWITCH'"
               :config="{
             x: logicGate.position.x - 1.5 * padding,
             y: logicGate.position.y,
             radius: padding / 4,
-            fill: 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === 0 ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
@@ -222,12 +259,12 @@
             />
 
             <v-circle
-              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1 && logicGate.logicType.name === 'BULB'"
+              v-if="(!snapbox.isShowingSnapBox || index !== snapbox.indexCurrentlyDragged) && logicGate.inputs.length == 1 && logicGate.logicType.name === 'LIGHT'"
               :config="{
             x: logicGate.position.x - 1.5 * padding,
             y: logicGate.position.y,
             radius: padding / 4,
-            fill: 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === 0 ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
@@ -254,7 +291,7 @@
               strokeWidth: 2,
               draggable: true
             }"
-            v-if="logicGate.logicType.name === 'BULB'"
+            v-if="logicGate.logicType.name === 'LIGHT' || logicGate.logicType.name === 'SWITCH'"
             />
           </v-group>
 
@@ -278,18 +315,38 @@
     </div>
     <div>
       
-      <img
-        :src="logicType.image"
-        v-for="logicType in logicTypes"
-        v-bind:key="logicType.name"
-        @click="addLogicGateToGrid(logicType)"
-        class="logic-type"
-        width="200px"
-      />
+      <div v-for="logicType in logicTypes" :key="logicType.name">
+        <img
+            :src="logicType.image"
+            @click="addLogicGateToGrid(logicType)"
+            class="logic-type"
+            :width="logicType.width"
+        />
+      </div>
 
-      
+      <button class="uk-button uk-button-primary side-btns" uk-toggle="target: #modal">Instructions</button>
+      <button class="uk-button uk-button-secondary side-btns" @click="downloadSchematic()">Download</button><br />
 
-      <button @click="downloadSchematic()">Download Schematic</button>
+      <div id="modal" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body modal-body">
+            <h1>Instructions</h1>
+            <h2>Logic Gates</h2>
+            <img :src="require('@/assets/lg_cheatsheet.jpg')"/>
+            <h2>Using LogiCraft</h2>
+            <ol>
+              <li>Click on a logic gate on the side panel</li>
+              <li>Drag logic gate from center to wanted position and repeat with other logic gates</li>
+              <li>Connect logic gates by cliking on one's output and then clicking on another one's input</li>
+              <li>Click download</li>
+              <li>Double click file to extract</li>
+              <li>Move folder into minecraft saves file</li> 
+              <li>Open Minecraft and select the new world. Have fun!</li> 
+            </ol>
+            
+            <button class="uk-modal-close uk-button uk-button-primary" type="button">Got it!</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -306,23 +363,33 @@ export default {
         {
           name: "AND",
           image: require("@/assets/andGate.svg"),
-          amountOfInputs: 2
+          amountOfInputs: 2,
+          width: "150px",
         },
         {
           name: "OR",
           image: require("@/assets/orGate.svg"),
-          amountOfInputs: 2
+          amountOfInputs: 2,
+          width: "150px",
         },
         {
           name: "NOT",
           image: require("@/assets/notGate.svg"),
-          amountOfInputs: 1
+          amountOfInputs: 1,
+          width: "150px",
         },
 
       {
-        name: "BULB",
+        name: "LIGHT",
         image: require("@/assets/lightBulb.webp"),
-        amountOfInputs: 1
+        amountOfInputs: 1,
+        width: "100px"
+      },
+      {
+        name: "SWITCH",
+        image: require("@/assets/power.jpg"),
+        amountOfInputs: 0,
+        width: "90px"
       }
       ],
       padding: 20,
@@ -341,13 +408,19 @@ export default {
   },
   methods: {
     addLogicGateToGrid(logicType) {
+      const inputs = [];
+
+      for (let i = 0; i < logicType.amountOfInputs; i++) {
+        inputs.push(null); 
+      }
+
       this.logicGates.push({
         logicType,
         position: {
           x: this.configKonva.width / 2 - this.padding / 2,
           y: this.configKonva.height / 2 - this.padding / 2
         },
-        inputs: logicType.amountOfInputs == 2 ? [null, null] : [null]
+        inputs
       });
     },
     onLogicGateDragged(index) {
@@ -410,7 +483,7 @@ export default {
         this.connector.inputIndex = currentInputIndex;
       }
     },
-    getPathIntesections(startingPosition, endingPosition, ) {
+    getPathIntesections(startingPosition, endingPosition) {
       console.log(startingPosition);
       console.log(endingPosition);
       if (
@@ -469,8 +542,8 @@ export default {
 
       const logicGatesData = this.logicGates.map((logicGate, index) => {
         const transformedInputs = logicGate.inputs
-        .filter(input => input !== null)
         .map(input => {
+          if (input === null) return null;
           const startingPosition = this.logicGates[input].position;
           const endingPosition = logicGate.position;
           const pathIntersections = this.getPathIntesections(
@@ -520,6 +593,12 @@ export default {
       document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
       a.click();    
       a.remove();  //afterward
+    },
+    onCircleHover() {
+      document.body.style.cursor = "pointer";
+    },
+    onCircleHoverOut() {
+      document.body.style.cursor = "default";
     }
   }
 };
@@ -537,5 +616,14 @@ export default {
 
 .logic-gate-connector {
   cursor: pointer;
+}
+
+.side-btns {
+  width: 210px;
+  margin-top: 20px;
+}
+
+.modal-body {
+  width: 800px;
 }
 </style>
