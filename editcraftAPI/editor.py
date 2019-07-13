@@ -102,7 +102,8 @@ class ChunkRow():
             #self._create_block_states()
             #row_state = 0
         row_state = ("%0.16X" % row_state)[::-1]
-        return [Block(self.palette[int(palette_index)], palette_index) for palette_index in row_state]
+        print([(int(palette_index, 16), palette_index) for palette_index in row_state])
+        return [Block(self.palette[int(palette_index, 16)], palette_index) for palette_index in row_state]
 
     def _calc_block_state(self):
         """Returns the value of the blockstate for tje chunk row"""
@@ -113,11 +114,11 @@ class ChunkRow():
     def _get_or_insert_palette(self, block_name, properties):
         """Returns the id of the block in palette (inserts if doesnt alread exist)"""
         try:
-            return self.palette.index(block_name)
+            return "%0.1X" % (self.palette.index(block_name))
         except ValueError:
             self._add_to_palette(block_name, properties)
             self.palette.append(block_name)
-            return len(self.palette) - 1
+            return "%0.1X" % (len(self.palette) - 1)
 
     # def _create_block_states(self):
     #     """Creates the blockstate array"""
