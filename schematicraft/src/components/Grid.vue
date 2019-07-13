@@ -11,7 +11,7 @@
         }"
             v-for="i in configKonva.width / padding"
             v-bind:key="`vertical${i}`"
-        
+          />
           <v-line :config="{
           points: [0, 0, 10, 10],
         }" />
@@ -294,7 +294,16 @@
             <h1>Instructions</h1>
             <h2>Logic Gates</h2>
             <img :src="require('@/assets/lg_cheatsheet.jpg')"/>
-            <h2>Adding World to Minecraft</h2>
+            <h2>Using LogiCraft</h2>
+            <ol>
+              <li>Click on a logic gate on the side panel</li>
+              <li>Drag logic gate from center to wanted position and repeat with other logic gates</li>
+              <li>Connect logic gates by cliking on one's output and then clicking on another one's input</li>
+              <li>Click download</li>
+              <li>Double click file to extract</li>
+              <li>Move folder into minecraft saves file</li> 
+              <li>Open Minecraft and select the new world. Have fun!</li> 
+            </ol>
             
             <button class="uk-modal-close uk-button uk-button-primary" type="button">Got it!</button>
         </div>
