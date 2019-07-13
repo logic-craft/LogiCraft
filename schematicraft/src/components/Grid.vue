@@ -258,7 +258,7 @@
             x: logicGate.position.x + 2.5 * padding,
             y: logicGate.position.y,
             radius: padding / 4,
-            fill: connector.connectorIndex === index && connector.inputIndex === null ? 'blue' : 'red',
+            fill: connector.connectorIndex === index && connector.inputIndex === undefined ? 'blue' : 'red',
             stroke: 'black',
             strokeWidth: 1
           }"
@@ -314,6 +314,8 @@
               draggable: true
             }"
             v-if="logicGate.logicType.name === 'LIGHT' || logicGate.logicType.name === 'SWITCH'"
+            @mouseover="onCircleHover"
+            @mouseleave="onCircleHoverOut"
             />
           </v-group>
 
@@ -494,21 +496,28 @@ export default {
         const logicGateOutputIndex = this.connector.isInput
           ? index
           : this.connector.connectorIndex;
-        const inputIndex = this.connector.inputIndex
+        const inputIndex = this.connector.inputIndex !== null
           ? this.connector.inputIndex
           : currentInputIndex;
+        console.log("this.connector.inputIndex is: ", this.connector.inputIndex);
+        console.log("logic game input index is: ", logicGateInputIndex);
+        console.log("logicGateOutputIndex is: ", logicGateOutputIndex);
+        console.log("input index is: ", inputIndex);
         this.$set(
           this.logicGates[logicGateInputIndex].inputs,
           inputIndex,
           logicGateOutputIndex
         );
+        console.log("I have set up the connection");
+        console.log(this.logicGates[logicGateInputIndex].inputs);
         this.connector.connectorIndex = null;
         this.connector.isInput = null;
         this.connector.inputIndex = null;
       } else {
         this.connector.connectorIndex = index;
         this.connector.isInput = isInput;
-        this.connector.inputIndex = currentInputIndex;
+        this.connector.inputIndex = currentInputIndex === undefined ? null : currentInputIndex ;
+        console.log("I have set the input index to: ", this.connector.inputIndex);
       }
     },
     getPathIntesections(startingPosition, endingPosition) {

@@ -11,10 +11,10 @@ class Gate:
         self.BASE_Y = 50
     
     def get_input_1_coord(self):
-        return [self.coord[0] - 1, self.coord[1]]
+        return [self.coord[0] - 1, self.coord[1] + 2]
 
     def get_input_2_coord(self):
-        return [self.coord[0] - 1, self.coord[1] + 2]
+        return [self.coord[0] - 1, self.coord[1]]
 
     def get_input_coord(self, coord_num=1):
         if len(self.inputs) == 1:
