@@ -289,13 +289,15 @@ export default {
       }
     },
     getPathIntesections(startingPosition, endingPosition) {
+      console.log(startingPosition);
+      console.log(endingPosition);
       if (
         startingPosition.x === endingPosition.x ||
         startingPosition.y === endingPosition.y
       ) {
         return [];
       } else {
-        return [endingPosition.x - this.padding, startingPosition.y];
+        return [endingPosition.x - 1.5 * this.padding, startingPosition.y];
       }
     },
     calculateLinePath(logicGateOutput, logicGateIndex, logicGateInputIndex) {
@@ -316,18 +318,21 @@ export default {
         endingPosition
       );
       const startPositionPadded = [
-        startingPosition.x + 3 * this.padding,
+        startingPosition.x + 2.5 * this.padding,
         startingPosition.y
       ];
       const endPositionPadded = [
-        endingPosition.x - this.padding,
+        endingPosition.x - 1.5 * this.padding,
         endingPosition.y + endPositionSkewY
       ];
-      return [
+      const itIs = [
         ...startPositionPadded,
         ...pathIntersections,
         ...endPositionPadded
       ];
+
+      console.log(itIs);
+      return itIs;
     },
     async downloadSchematic() {
       // [{
@@ -343,15 +348,16 @@ export default {
         const transformedInputs = logicGate.inputs
         .filter(input => input !== null)
         .map(input => {
-          const startingPosition = logicGate.position;
-          const endingPosition = this.logicGates[input].position;
+          const startingPosition = this.logicGates[input].position;
+          const endingPosition = logicGate.position;
           const pathIntersections = this.getPathIntesections(
             startingPosition,
             endingPosition
           );
           const unpaddedPathIntersections = pathIntersections.map(
-            pathIntersection => pathIntersection / this.padding
+            pathIntersection => pathIntersection / this.padding + 0.5
           );
+
 
           return {
             id: input,
@@ -362,7 +368,7 @@ export default {
         return {
           type: logicGate.logicType.name,
           inputs: transformedInputs,
-          coordinate: [(logicGate.position.x / this.padding) - 1, (logicGate.position.y / this.padding) + 1.5]
+          coordinate: [(logicGate.position.x / this.padding), (logicGate.position.y / this.padding) + 1.5]
         };
       });
 
